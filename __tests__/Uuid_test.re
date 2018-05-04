@@ -48,8 +48,7 @@ describe("UUID", () => {
       )
       |> toBe("a981a0c2-68b1-35dc-bcfc-296e52ab01ec");
     });
-    test("should write to a buffer", () => {
-      open Expect;
+    describe("writing to a buffer", () => {
       let testBuf = [|
         0x91,
         0x25,
@@ -68,16 +67,36 @@ describe("UUID", () => {
         0x1c,
         0xf6,
       |];
-      let buffer = Array.make(16, 0);
-      let uuid =
+      test("should write to a buffer", () => {
+        open Expect;
+        let buffer = Array.make(16, 0);
         Uuid.V3.createWithBuffer(
           ~name="hello.example.com",
           ~namespace=`Uuid(Uuid.V3._DNS),
           ~buffer,
           (),
-        );
-      let bufferContents = testBuf |> Array.mapi((index, _) => buffer[index]);
-      expect(bufferContents) |> toEqual(testBuf);
+        )
+        |> ignore;
+        let bufferContents =
+          testBuf |> Array.mapi((index, _) => buffer[index]);
+        expect(bufferContents) |> toEqual(testBuf);
+      });
+      test("should write to a buffer with an offset", () => {
+        open Expect;
+        let offset = 3;
+        let buffer = Array.make(19, 0);
+        Uuid.V3.createWithBuffer(
+          ~name="hello.example.com",
+          ~namespace=`Uuid(Uuid.V3._DNS),
+          ~buffer,
+          ~offset,
+          (),
+        )
+        |> ignore;
+        let bufferContents =
+          testBuf |> Array.mapi((index, _) => buffer[index + offset]);
+        expect(bufferContents) |> toEqual(testBuf);
+      });
     });
   });
 });
