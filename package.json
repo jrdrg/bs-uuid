@@ -9,8 +9,12 @@
   "keywords": [
     "BuckleScript"
   ],
-  "author": "",
+  "author": "jrdrg",
   "license": "MIT",
+  "repository": { 
+    "type" : "git",
+    "url" : "https://github.com/jrdrg/bs-uuid.git"
+  },
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.2",
     "bs-platform": "^3.0.0",
