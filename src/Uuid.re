@@ -19,10 +19,12 @@ module V1 = {
   external createWithBuffer :
     (~options: optionsT=?, ~buffer: Buffer.t, ~offset: int, unit) => t =
     "uuid/v1";
+  [@bs.send] external toString : t => string = "";
 };
 
 module V3 = {
   type t;
   [@bs.module]
   external create : (~name: string, ~namespace: string) => t = "uuid/v3";
+  [@bs.send] external toString : t => string = "";
 };
