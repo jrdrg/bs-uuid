@@ -1,6 +1,6 @@
 {
   "name": "bs-uuid",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
@@ -11,9 +11,9 @@
   ],
   "author": "jrdrg",
   "license": "MIT",
-  "repository": { 
-    "type" : "git",
-    "url" : "https://github.com/jrdrg/bs-uuid.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jrdrg/bs-uuid.git"
   },
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.2",
