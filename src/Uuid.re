@@ -1,3 +1,23 @@
+/* 16 byte array */
+type bytesT = (
+  int,
+  int,
+  int,
+  int,
+  int,
+  int,
+  int,
+  int,
+  int,
+  int,
+  int,
+  int,
+  int,
+  int,
+  int,
+  int,
+);
+
 module V1 = {
   type t;
   type optionsT;
@@ -18,7 +38,7 @@ module V1 = {
   external createWithOptions : (~options: optionsT) => t = "uuid/v1";
   [@bs.module]
   external createWithBuffer :
-    (~options: optionsT=?, ~buffer: Buffer.t, ~offset: int, unit) => t =
+    (~options: optionsT=?, ~buffer: array(int), ~offset: int, unit) => t =
     "uuid/v1";
 };
 
@@ -31,7 +51,7 @@ module V3 = {
   external create :
     (
       ~name: string,
-      ~namespace: [@bs.unwrap] [ | `Uuid(string) | `Bytes(array(int))]
+      ~namespace: [@bs.unwrap] [ | `Uuid(string) | `Bytes(bytesT)]
     ) =>
     t =
     "uuid/v3";
@@ -39,8 +59,8 @@ module V3 = {
   external createWithBuffer :
     (
       ~name: string,
-      ~namespace: [@bs.unwrap] [ | `Uuid(string) | `Bytes(array(int))],
-      ~buffer: Buffer.t,
+      ~namespace: [@bs.unwrap] [ | `Uuid(string) | `Bytes(bytesT)],
+      ~buffer: array(int),
       ~offset: int=?,
       unit
     ) =>
