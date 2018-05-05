@@ -49,6 +49,7 @@ describe("UUID", () => {
       |> toBe("a981a0c2-68b1-35dc-bcfc-296e52ab01ec");
     });
     describe("writing to a buffer", () => {
+      /* data from this test https://github.com/kelektiv/node-uuid/blob/master/test/test.js#L143 */
       let testBuf = [|
         0x91,
         0x25,
@@ -96,6 +97,122 @@ describe("UUID", () => {
         let bufferContents =
           testBuf |> Array.mapi((index, _) => buffer[index + offset]);
         expect(bufferContents) |> toEqual(testBuf);
+      });
+    });
+  });
+  describe("V4", () => {
+    test("it should create a uuid", () => {
+      open Expect;
+      let uuid = Uuid.V4.create();
+      let lengths =
+        uuid
+        |> Uuid.V4.toString
+        |> Js.String.split("-")
+        |> Array.map(i => String.length(i));
+      expect(lengths) |> toEqual([|8, 4, 4, 4, 12|]);
+    });
+    test("it should create a uuid from bytes", () => {
+      open Expect;
+      let uuid =
+        Uuid.V4.createWithOptions(
+          ~options=
+            Uuid.V4.options(
+              ~random=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16),
+              (),
+            ),
+        );
+      uuid
+      |> Uuid.V4.toString
+      |> expect
+      |> toBe("01020304-0506-4708-890a-0b0c0d0e0f10");
+    });
+    test("it should create a uuid from a rng function", () => {
+      open Expect;
+      let uuid =
+        Uuid.V4.createWithOptions(
+          ~options=
+            Uuid.V4.options(
+              ~rng=
+                () => (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16),
+              (),
+            ),
+        );
+      uuid
+      |> Uuid.V4.toString
+      |> expect
+      |> toBe("01020304-0506-4708-890a-0b0c0d0e0f10");
+    });
+    describe("writing to a buffer", () => {
+      test("it should write to a buffer", () => {
+        open Expect;
+        let buffer = Array.make(16, 0);
+        Uuid.V4.createWithBuffer(
+          ~options=
+            Uuid.V4.options(
+              ~random=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16),
+              (),
+            ),
+          ~buffer,
+          (),
+        )
+        |> ignore;
+        expect(buffer)
+        |> toEqual([|
+             1,
+             2,
+             3,
+             4,
+             5,
+             6,
+             71,
+             8,
+             137,
+             10,
+             11,
+             12,
+             13,
+             14,
+             15,
+             16,
+           |]);
+      });
+      test("it should write to a buffer at an offset", () => {
+        open Expect;
+        let buffer = Array.make(20, 0);
+        Uuid.V4.createWithBuffer(
+          ~options=
+            Uuid.V4.options(
+              ~random=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16),
+              (),
+            ),
+          ~buffer,
+          ~offset=3,
+          (),
+        )
+        |> ignore;
+        expect(buffer)
+        |> toEqual([|
+             0,
+             0,
+             0,
+             1,
+             2,
+             3,
+             4,
+             5,
+             6,
+             71,
+             8,
+             137,
+             10,
+             11,
+             12,
+             13,
+             14,
+             15,
+             16,
+             0,
+           |]);
       });
     });
   });
